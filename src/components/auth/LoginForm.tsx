@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useFormState, useFormStatus } from "react-dom";
-import { FaGithub, FaGoogle } from "react-icons/fa";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,6 +23,7 @@ import { FormError } from "../Form-error";
 import { FormSuccess } from "../Form-success";
 import { login, State } from "@/actions/login";
 import { ReactNode } from "react";
+import Social from "./Social";
 
 export function LoginForm() {
   const [formState, formAction] = useFormState(login, null);
@@ -57,18 +58,7 @@ export function LoginForm() {
       {formState?.error?.password ? (
         <FormErrorMessage>{formState?.error.password}</FormErrorMessage>
       ) : null}
-      <CardFooter className="flex flex-col space-y-6 mt-5">
-        <div className=" flex flex-shrink-0 justify-between  gap-20">
-          <Button variant="outline" className="px-10">
-            {" "}
-            <FaGoogle />
-          </Button>
-          <Button variant="outline" className="px-10">
-            {" "}
-            <FaGithub />
-          </Button>
-        </div>
-      </CardFooter>
+
       {!formState?.isSuccess && <FormError message={formState?.message} />}
       {formState?.isSuccess && <FormSuccess message={formState?.message} />}
       <Button

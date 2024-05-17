@@ -1,4 +1,5 @@
 import { RegisterForm } from "@/components/auth/RegisterForm";
+import Social from "@/components/auth/Social";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,6 +20,7 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <RegisterForm />
+          <Social />
         </CardContent>
       </Card>
     </div>

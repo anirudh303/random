@@ -1,4 +1,5 @@
 import { LoginForm } from "@/components/auth/LoginForm";
+import Social from "@/components/auth/Social";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,6 +24,7 @@ export default function LoginPage() {
         </CardHeader>
         <CardContent>
           <LoginForm />
+          <Social />
         </CardContent>
       </Card>
     </div>

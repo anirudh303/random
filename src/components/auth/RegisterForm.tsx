@@ -119,19 +119,6 @@ export function RegisterForm() {
         <FormErrorMessage>{formState?.error.age}</FormErrorMessage>
       ) : null}
 
-      <CardFooter className="flex flex-col space-y-6 ">
-        <div className=" flex flex-shrink-0 justify-between  mt-6 gap-20">
-          <Button variant="outline" className="px-10">
-            {" "}
-            <FaGoogle />
-          </Button>
-          <Button variant="outline" className="px-10">
-            {" "}
-            <FaGithub />
-          </Button>
-        </div>
-      </CardFooter>
-
       {!formState?.isSuccess && <FormError message={formState?.message} />}
       {formState?.isSuccess && <FormSuccess message={formState?.message} />}
       <Button
