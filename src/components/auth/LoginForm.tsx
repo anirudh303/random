@@ -17,13 +17,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { FormError } from "../Form-error";
 import { LoginSchema } from "@/schemas/index";
 import { CardFooter } from "@/components/ui/card";
-import { FormError } from "../Form-error";
 import { FormSuccess } from "../Form-success";
 import { login, State } from "@/actions/login";
 import { ReactNode } from "react";
 import Social from "./Social";
+import Link from "next/link";
 
 export function LoginForm() {
   const [formState, formAction] = useFormState(login, null);
@@ -32,29 +33,41 @@ export function LoginForm() {
     <form action={formAction} className=" space-y-3">
       {/* username */}
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="username">Username</Label>
+        <Label htmlFor="uid">Username</Label>
         <Input
-          id="username"
+          id="uid"
           disabled={pending}
-          placeholder="Enter your Username"
-          name="username"
+          placeholder="Enter your Username / Email"
+          name="uid"
+          required
         />
       </div>
 
-      {formState?.error?.username ? (
-        <FormErrorMessage>{formState?.error.username}</FormErrorMessage>
+      {formState?.error?.uid ? (
+        <FormErrorMessage>{formState?.error.uid}</FormErrorMessage>
       ) : null}
 
       {/* //password */}
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="password">password</Label>
+        <Label htmlFor="password">Password</Label>
         <Input
           id="password"
           disabled={pending}
           name="password"
           placeholder="Enter your password"
+          required
         />
       </div>
+
+      {/* forgot password */}
+      <Button
+        className=" text-sm text-muted-foreground px-0"
+        variant="link"
+        asChild
+      >
+        <Link href="/auth/reset">Forgot Password</Link>
+      </Button>
+
       {formState?.error?.password ? (
         <FormErrorMessage>{formState?.error.password}</FormErrorMessage>
       ) : null}
@@ -67,7 +80,11 @@ export function LoginForm() {
         className="w-full bg-black text-white"
       >
         {" "}
-        {!pending ? <p>Login</p> : <p>LoggingIn ...</p>}
+        {!pending || !formState?.isPending ? (
+          <p>Login</p>
+        ) : (
+          <p>LoggingIn ...</p>
+        )}
       </Button>
     </form>
   );

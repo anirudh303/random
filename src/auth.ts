@@ -31,6 +31,20 @@ export const {
     },
   },
   callbacks: {
+    async signIn({ user, account }) {
+      // allow oauth without email verification
+      if (account?.provider != "credentials") return true;
+      //just to remove type error
+      if (!user.id || !user) return false;
+
+      const existingUser = await getUserById(user.id);
+
+      if (!existingUser?.emailVerified) return false;
+
+      // todo add 2fa
+
+      return true;
+    },
     async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;

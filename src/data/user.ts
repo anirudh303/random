@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-
+import { LoginSchema, emailSchema } from "@/schemas";
 export const getUserByEmail = async (email: string) => {
   try {
     const user = await db.user.findUnique({
@@ -27,8 +27,7 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
-
-export const getUserByUserName = async (username: string) => {
+const getUserByUserName = async (username: string) => {
   try {
     const user = await db.user.findUnique({
       where: {
@@ -38,6 +37,17 @@ export const getUserByUserName = async (username: string) => {
 
     return user;
   } catch {
+    return null;
+  }
+};
+
+export const getUserByUserNameOrEmail = async (uid: string) => {
+  try {
+    const user = emailSchema.safeParse(uid).success
+      ? await getUserByEmail(uid)
+      : await getUserByUserName(uid);
+    return user;
+  } catch (error) {
     return null;
   }
 };

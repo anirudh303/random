@@ -4,6 +4,8 @@ import { RegisterSchema } from "@/schemas/index";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 import { getUserByEmail } from "@/data/user";
+import { generateVerificationToken } from "@/data/tokens";
+import { sendVerificationLinkEmail } from "@/data/resend";
 
 interface StateProps {
   status: string;
@@ -18,9 +20,8 @@ export const register = async (prevState: unknown, formData: FormData) => {
   const result = RegisterSchema.safeParse(
     Object.fromEntries(formData.entries())
   );
-
+  // input alidation by zod at server side
   if (result.success === false) {
-    console.log(result.error.formErrors.fieldErrors.repeatPassword);
     return {
       status: "failed",
       isSuccess: false,
@@ -33,7 +34,7 @@ export const register = async (prevState: unknown, formData: FormData) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await getUserByEmail(email);
-
+  // checking if user exists
   if (existingUser) {
     return {
       status: "failed",
@@ -53,11 +54,18 @@ export const register = async (prevState: unknown, formData: FormData) => {
     },
   });
 
-  // todo: send verificatin token mail
+  const VerificationToken = await generateVerificationToken(email);
+
+  //  send verificatin token mail
+  await sendVerificationLinkEmail(
+    VerificationToken.email,
+    VerificationToken.token
+  );
+
   return {
     status: "success",
     isSuccess: true,
     error: null,
-    message: "Registered Successfully",
+    message: "Confirmation Email Sent",
   };
 };

@@ -4,9 +4,9 @@ import bcrypt from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-import { LoginSchema } from "@/schemas";
+import { LoginSchema, emailSchema } from "@/schemas";
 import { db } from "./lib/db";
-import { getUserByUserName } from "./data/user";
+import { getUserByUserNameOrEmail } from "./data/user";
 import google from "next-auth/providers/google";
 
 export default {
@@ -21,17 +21,19 @@ export default {
     }),
     Credentials({
       async authorize(credentials) {
+        console.log(" enetered authorize function");
         const validatedFields = LoginSchema.safeParse(credentials);
 
         if (validatedFields.success) {
-          const { username, password } = validatedFields.data;
+          const { uid, password } = validatedFields.data;
+          const user = await getUserByUserNameOrEmail(uid);
 
-          const user = await getUserByUserName(username);
           if (!user || !user.password) return null;
           const passwordsMatch = await bcrypt.compare(password, user.password);
-
+          console.log("check of last", passwordsMatch);
           if (passwordsMatch) return user;
         }
+        console.log(" failed at authorize ");
         return null;
       },
     }),
